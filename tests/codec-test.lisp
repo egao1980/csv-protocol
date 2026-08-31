@@ -12,13 +12,13 @@
 (deftest-parametrize decode-rfc-vectors
     ((input header expected-first)
      ("name,age" t nil)
-     ("name,age\r\nalice,30" t ("alice" "30"))
-     ("name,age\nalice,30" t ("alice" "30"))
-     ("1,2" nil (#("1" "2")))
-     ("a,\"b,c\"" nil (#("a" "b,c")))
-     ("\"a\"\"b\",c" nil (#("a\"b" "c")))
-     (",," nil (#("" "" "")))
-     ("a," nil (#("a" ""))))
+     ((format nil "name,age~C~Calice,30" #\Return #\Newline) t '("alice" "30"))
+     ((format nil "name,age~Calice,30" #\Newline) t '("alice" "30"))
+     ("1,2" nil #("1" "2"))
+     ("a,\"b,c\"" nil #("a" "b,c"))
+     ("\"a\"\"b\",c" nil #("a\"b" "c"))
+     (",," nil #("" "" ""))
+     ("a," nil #("a" "")))
   (let ((doc (decode input :header header)))
     (if (null expected-first)
         (ok (zerop (length doc)))
@@ -28,7 +28,7 @@
               (ok (string= (first expected-first) (%row-get row "name")))
               (when (second expected-first)
                 (ok (string= (second expected-first) (%row-get row "age")))))
-            (ok (equalp expected-first (list (aref doc 0))))))))
+            (ok (equalp expected-first (aref doc 0)))))))
 
 (deftest quoted-embedded-newline
   (let ((doc (decode (format nil "name,note~C\"alice\",\"hello~Cworld\"" #\Newline #\Newline)
@@ -138,6 +138,6 @@
     (ok (string= "2" (%row-get (aref doc 0) "n")))))
 
 (deftest star-dialect-binding
-  (let ((*csv-dialect* :excel-eu)
-        (out (encode (list #("a" "b")) :header nil)))
+  (let* ((*csv-dialect* :excel-eu)
+         (out (encode (list #("a" "b")) :header nil)))
     (ok (search "a;b" out))))
