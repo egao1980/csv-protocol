@@ -2,6 +2,8 @@
 
 CLOS CSV encode/decode for [cl-stack](https://github.com/egao1980/cl-stack) (RFC 4180 dialects). Implements [`serdes-protocol`](https://github.com/egao1980/serdes-protocol) `:csv` and `:tsv`.
 
+OCI **0.1.0** — `ghcr.io/egao1980/cl-systems/csv-protocol:0.1.0`
+
 **Cookbook:** [csv.md](https://github.com/egao1980/cl-stack/blob/main/docs/cookbooks/csv.md) · Brief: [csv-protocol.md](https://github.com/egao1980/cl-stack/blob/main/docs/capabilities/csv-protocol.md)
 
 ```lisp
